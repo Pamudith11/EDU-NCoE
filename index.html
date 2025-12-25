@@ -6,116 +6,71 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 
-    - primary meta tag
-  -->
-  <title>EduWeb - Exchange Program Enrollment </title>
+  <title>EduWeb - Exchange Program Enrollment</title>
   <meta name="title" content="EduWeb - The Best Program to Enroll for Exchange">
   <meta name="description" content="This is an education html template made by codewithsadee">
 
-  <!-- 
-    - favicon
-  -->
   <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
-
-  <!-- 
-    - custom css link
-  -->
   <link rel="stylesheet" href="./assets/css/style.css">
 
-  <!-- 
-    - google font link
-  -->
- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-<style>
-  .user-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 5%;
-    background: #0f172a;
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-  }
-  .welcome-text { color: #93c5fd; font-weight: 600; font-size: 18px; font-family: 'Poppins', sans-serif; }
-  .forum-btn {
-    background: linear-gradient(to right, #21d4fd, #b721ff);
-    color: white;
-    padding: 8px 18px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 13px;
-    font-family: 'Poppins', sans-serif;
-    transition: 0.3s;
-  }
-</style>
-</head>
-
-  <!-- 
-    - preload images
-  -->
-  <link rel="preload" as="image" href="./assets/images/hero-bg.svg">
-  <link rel="preload" as="image" href="./assets/images/hero-banner-1.jpg">
-  <link rel="preload" as="image" href="./assets/images/hero-banner-2.jpg">
-  <link rel="preload" as="image" href="./assets/images/hero-shape-2.png">
-
-</head>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-
-<script>
-firebase.auth().onAuthStateChanged((user) => {
-    // Desktop එකේ බටන් එක
-    const btnText = document.getElementById('btnText');
-    const mainLoginBtn = document.getElementById('mainLoginBtn');
+  <style>
+    /* Mobile Greeting Style */
+    #mobileGreeting {
+      padding: 15px 20px;
+      background: rgba(56, 189, 248, 0.1);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      margin-bottom: 10px;
+      font-family: 'Poppins', sans-serif;
+    }
     
-    // මොබයිල් මෙනු එකේ විස්තර
-    const mobileGreeting = document.getElementById('mobileGreeting');
-    const mobileUsername = document.getElementById('mobileUsername');
+    /* Ensure Header actions are visible */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
 
-    if (user) {
-        // ලොග් වී ඇත්නම් නම ලබා ගැනීම
+  <script>
+    firebase.auth().onAuthStateChanged((user) => {
+      const btnText = document.getElementById('btnText');
+      const mainLoginBtn = document.getElementById('mainLoginBtn');
+      const mobileGreeting = document.getElementById('mobileGreeting');
+      const mobileUsername = document.getElementById('mobileUsername');
+
+      if (user) {
         const firstName = user.displayName ? user.displayName.split(' ')[0] : "Student";
         
-        // 1. Desktop Button එක Update කිරීම
         if (btnText) btnText.innerText = "Hi, " + firstName;
         if (mainLoginBtn) mainLoginBtn.href = "javascript:void(0)";
-
-        // 2. Mobile Menu එක Update කිරීම
         if (mobileGreeting) mobileGreeting.style.display = "block";
         if (mobileUsername) mobileUsername.innerText = firstName;
 
-        // Database එකෙන් නම තිබේදැයි පරීක්ෂා කිරීම
         firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
-            const userData = snapshot.val();
-            if (userData && userData.fullName) {
-                const dbName = userData.fullName.split(' ')[0];
-                if (btnText) btnText.innerText = "Hi, " + dbName;
-                if (mobileUsername) mobileUsername.innerText = dbName;
-            }
+          const userData = snapshot.val();
+          if (userData && userData.fullName) {
+            const dbName = userData.fullName.split(' ')[0];
+            if (btnText) btnText.innerText = "Hi, " + dbName;
+            if (mobileUsername) mobileUsername.innerText = dbName;
+          }
         });
-    } else {
-        // ලොග් වී නැත්නම්
+      } else {
         if (btnText) btnText.innerText = "Login for free";
         if (mobileGreeting) mobileGreeting.style.display = "none";
-    }
-});
-</script>
-<body id="top">
+      }
+    });
+  </script>
+</head>
 
-  <!-- 
-    - #HEADER
-  -->
+<body id="top">
 
   <header class="header" data-header>
     <div class="container">
@@ -123,71 +78,47 @@ firebase.auth().onAuthStateChanged((user) => {
       <a href="#" class="logo">
         <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
       </a>
-<div class="header-actions">
- 
 
-  <button class="header-action-btn" aria-label="open menu" data-nav-toggler>
-    <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
-  </button>
-</div>
       <nav class="navbar" data-navbar>
-
         <div class="wrapper">
           <a href="#" class="logo">
             <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
           </a>
-        <div class="user-greeting">
-           <nav class="navbar" data-navbar>
-  <div class="wrapper">
-    <a href="#" class="logo">
-      <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
-    </a>
-    
-    <div id="mobileGreeting" style="display: none; padding: 10px 20px; color: #38bdf8; font-weight: bold;">
-      👋 Hi, <span id="mobileUsername">Student</span>
-    </div>
 
-    <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
-      <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
-    </button>
-  </div>
-  ...
-</nav>
-<div>
-<li>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+
+        <div id="mobileGreeting" style="display: none;">
+          <span style="font-size: 14px; color: var(--oxford-blue);">👋 Hi, </span>
+          <span id="mobileUsername" style="color: #38bdf8; font-weight: 700;">Student</span>
+        </div>
+
         <ul class="navbar-list">
-
-          <li class="navbar-item">
-            <a href="#home" class="navbar-link" data-nav-link>Home</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#about" class="navbar-link" data-nav-link>About</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#courses" class="navbar-link" data-nav-link>Courses</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#blog" class="navbar-link" data-nav-link>Blog</a>
-          </li>
-
-          <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Contact</a>
-          </li>
-
+          <li class="navbar-item"><a href="#home" class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="#about" class="navbar-link" data-nav-link>About</a></li>
+          <li class="navbar-item"><a href="#courses" class="navbar-link" data-nav-link>Courses</a></li>
+          <li class="navbar-item"><a href="#blog" class="navbar-link" data-nav-link>Blog</a></li>
+          <li class="navbar-item"><a href="#" class="navbar-link" data-nav-link>Contact</a></li>
         </ul>
-
       </nav>
 
       <div class="header-actions">
+        <a href="login.html" class="btn has-before" id="mainLoginBtn">
+          <span class="span" id="btnText">Login for free</span>
+          <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+        </a>
 
-      
-<a href="login.html" class="btn has-before">
-<span class="span">Login for free</span>
-<ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-  </a>
+        <button class="header-action-btn" aria-label="open menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+
+      <div class="overlay" data-nav-toggler data-overlay></div>
+
+    </div>
+  </header>
 
   <button class="header-action-btn" aria-label="open menu" data-nav-toggler>
       <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
