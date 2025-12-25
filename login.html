@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - EduWeb | NCOE</title>
+  
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #21d4fd;
+      --secondary-color: #b721ff;
+      --bg-dark: #0f172a;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh;
+      background: var(--bg-dark) url('./assets/images/hero-bg.svg') cover;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-img { width: 100px; margin-bottom: 15px; }
+
+    .input-group { text-align: left; margin-bottom: 15px; }
+    .input-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 5px; }
+    
+    .input-field, select {
+      width: 100%; padding: 12px; border: 1px solid #e2e8f0;
+      border-radius: 10px; outline: none; font-family: 'Poppins';
+      transition: 0.3s;
+    }
+
+    .input-field:focus, select:focus { border-color: var(--primary-color); }
+
+    .google-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
+      background: #1e293b; color: white; cursor: pointer;
+      font-weight: 600; font-size: 16px; margin-top: 10px; transition: 0.3s;
+    }
+
+    .google-btn:hover { background: #0f172a; transform: translateY(-2px); }
+    .google-btn img { width: 20px; filter: brightness(0) invert(1); }
+
+    .brand-highlight { color: #007bff; font-weight: 700; }
+    .footer-text { font-size: 11px; margin-top: 20px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <img src="./assets/images/ncoelogo.svg" alt="EduWeb" class="logo-img">
+    <h2 style="font-family: 'League Spartan'; margin-bottom: 5px;">Student Portal</h2>
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 25px;">Enter your details to access learning materials.</p>
+
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" id="user-name" class="input-field" placeholder="E.g. Kamal Perera">
+    </div>
+
+    <div class="input-group">
+      <label>Phone Number</label>
+      <input type="tel" id="user-phone" class="input-field" placeholder="E.g. 0712345678">
+    </div>
+
+    <div class="input-group">
+      <label>Select College (NCOE)</label>
+      <select id="user-college">
+        <option value="">-- Choose Your College --</option>
+        <option value="Siyane">Siyane NCOE</option>
+        <option value="Mahaweli">Mahaweli NCOE</option>
+        <option value="Pasdunrata">Pasdunrata NCOE</option>
+        <option value="Ruhuna">Ruhuna NCOE</option>
+        <option value="Hapitigam">Hapitigam NCOE</option>
+        <option value="Nilwala">Nilwala NCOE</option>
+        <option value="Vavuniya">Vavuniya NCOE</option>
+        <option value="Jaffna">Jaffna NCOE</option>
+      </select>
+    </div>
+
+    <button class="google-btn" id="btn-login">
+      <img src="./assets/images/logoo.svg" alt="Google">
+      Register & Sign in with Google
+    </button>
+
+    <p class="footer-text">
+      Developed by <span class="brand-highlight">Department of Technology</span><br>
+      Siyane National College of Education
+    </p>
+  </div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtm51hTUEFBN7c9PIyAgTbMU6gFyBZ1B0", 
+    authDomain: "eduweb-b4b35.firebaseapp.com",
+    databaseURL: "https://eduweb-b4b35-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "eduweb-b4b35",
+    storageBucket: "eduweb-b4b35.firebasestorage.app",
+    appId: "1:604814824340:web:85452d467ed1f268363581",
+    measurementId: "G-4ZDKT09QV6"
+  };
+
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const db = firebase.database();
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  document.getElementById('btn-login').addEventListener('click', () => {
+    // Get Form Data
+    const fullName = document.getElementById('user-name').value;
+    const phone = document.getElementById('user-phone').value;
+    const college = document.getElementById('user-college').value;
+
+    // Validation
+    if (!fullName || !phone || !college) {
+      alert("Please fill all details before signing in!");
+      return;
+    }
+
+    // Sign in with Google
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        
+        // Save All Data to Firebase
+        db.ref('users/' + user.uid).set({
+          fullName: fullName,
+          phone: phone,
+          college: college,
+          gmail_name: user.displayName,
+          email: user.email,
+          profile_picture: user.photoURL,
+          last_login: Date.now()
+        }).then(() => {
+          window.location.href = "index.html"; 
+        });
+      })
+      .catch((error) => {
+        alert("Login Error: " + error.message);
+      });
+  });
+</script>
+</body>
+</html>

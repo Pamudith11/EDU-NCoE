@@ -1,0 +1,83 @@
+<style>
+  /* 1. Mobile Responsiveness - Phone එකෙන් බලන අයට ලස්සනට පෙනෙන්න */
+  @media (max-width: 600px) {
+    .category-card {
+      max-width: 100% !important; 
+      padding: 35px 15px !important; 
+    }
+    .grid-list {
+      gap: 20px !important;
+      padding: 10px !important;
+    }
+    .h2.section-title {
+      font-size: 26px !important;
+    }
+  }
+
+  /* smooth hover effects සඳහා */
+  .category-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+</style>
+
+<section class="section category" aria-label="category" style="background-color: #0b1120 !important; min-height: 100vh; padding: 60px 0; font-family: 'Poppins', sans-serif;">
+  <div class="container">
+    
+    <h2 class="h2 section-title" style="text-align: center; margin-bottom: 50px; color: #ffffff !important; font-weight: 800; font-size: 32px; letter-spacing: 1px; text-transform: uppercase;">Select Your Material Type</h2>
+
+    <ul class="grid-list" style="display: flex; flex-direction: column; gap: 35px; list-style: none; padding: 20px; align-items: center;">
+
+      <li style="width: 100%; max-width: 500px;">
+        <div class="category-card" 
+             onclick="window.location.href='https://mega.nz/folder/cA8S1bAK#68vA1YuabdbsJuorDv1lFQ'"
+             onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(59, 130, 246, 0.3)'; this.style.borderColor='rgba(59, 130, 246, 0.8)';" 
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 15px rgba(59, 130, 246, 0.1)'; this.style.borderColor='rgba(59, 130, 246, 0.3)';"
+             style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; min-height: 280px; text-align: center; background: rgba(15, 23, 42, 0.95); border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 24px; width: 100%;">
+          
+          <div class="card-icon" style="width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; background: rgba(59, 130, 246, 0.1); border-radius: 50%;">
+            <img src="./assets/images/past-papers.svg" alt="Past Papers" style="width: 60%; filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.6));">
+          </div>
+          
+          <h3 style="font-size: 26px; font-weight: 700; color: #93c5fd; margin: 0 0 5px 0;">Past Papers</h3>
+          <p style="margin: 12px 0; font-size: 15px; color: #94a3b8; line-height: 1.6;">Access a collection of previous exam papers to sharpen your skills.</p>
+          <span style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 7px 22px; border-radius: 50px; font-size: 13px; font-weight: 600;">15 Files</span>
+        </div>
+      </li>
+
+      <li style="width: 100%; max-width: 500px;">
+        <div class="category-card" 
+             onclick="window.location.href='https://mega.nz/folder/1J9X1K6I#U5Pw4vu-DKI86IJt0CkgRw'"
+             onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(234, 179, 8, 0.3)'; this.style.borderColor='rgba(234, 179, 8, 0.8)';" 
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 15px rgba(234, 179, 8, 0.1)'; this.style.borderColor='rgba(234, 179, 8, 0.3)';"
+             style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; min-height: 280px; text-align: center; background: rgba(15, 23, 42, 0.95); border: 2px solid rgba(234, 179, 8, 0.3); border-radius: 24px; width: 100%;">
+          
+          <div class="card-icon" style="width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; background: rgba(234, 179, 8, 0.1); border-radius: 50%;">
+            <img src="./assets/images/learning.svg" alt="Learning Materials" style="width: 60%; filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.6));">
+          </div>
+          
+          <h3 style="font-size: 26px; font-weight: 700; color: #fde047; margin: 0 0 5px 0;">Learning Materials</h3>
+          <p style="margin: 12px 0; font-size: 15px; color: #94a3b8; line-height: 1.6;">Comprehensive guides and textbooks for in-depth understanding.</p>
+          <span style="background: rgba(234, 179, 8, 0.15); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.4); padding: 7px 22px; border-radius: 50px; font-size: 13px; font-weight: 600;">20 Files</span>
+        </div>
+      </li>
+
+      <li style="width: 100%; max-width: 500px;">
+        <div class="category-card" 
+             onclick="window.location.href='https://mega.nz/folder/xJM0gJ4a#nliimfTdGjSMPoFTzC0FKQ'"
+             onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(239, 68, 68, 0.3)'; this.style.borderColor='rgba(239, 68, 68, 0.8)';" 
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 15px rgba(239, 68, 68, 0.1)'; this.style.borderColor='rgba(239, 68, 68, 0.3)';"
+             style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; min-height: 280px; text-align: center; background: rgba(15, 23, 42, 0.95); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 24px; width: 100%;">
+          
+          <div class="card-icon" style="width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 50%;">
+            <img src="./assets/images/short-notes.svg" alt="Short Notes" style="width: 60%; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.6));">
+          </div>
+          
+          <h3 style="font-size: 26px; font-weight: 700; color: #fca5a5; margin: 0 0 5px 0;">Notes</h3>
+          <p style="margin: 12px 0; font-size: 15px; color: #94a3b8; line-height: 1.6;">Quick summary notes for last-minute revisions and easy recall.</p>
+          <span style="background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 7px 22px; border-radius: 50px; font-size: 13px; font-weight: 600;">10 Files</span>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>

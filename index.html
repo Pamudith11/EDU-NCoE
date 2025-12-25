@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 
+    - primary meta tag
+  -->
+  <title>EduWeb - Exchange Program Enrollment </title>
+  <meta name="title" content="EduWeb - The Best Program to Enroll for Exchange">
+  <meta name="description" content="This is an education html template made by codewithsadee">
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <!-- 
+    - google font link
+  -->
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<style>
+  .user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  .welcome-text { color: #93c5fd; font-weight: 600; font-size: 18px; font-family: 'Poppins', sans-serif; }
+  .forum-btn {
+    background: linear-gradient(to right, #21d4fd, #b721ff);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+  }
+</style>
+</head>
+
+  <!-- 
+    - preload images
+  -->
+  <link rel="preload" as="image" href="./assets/images/hero-bg.svg">
+  <link rel="preload" as="image" href="./assets/images/hero-banner-1.jpg">
+  <link rel="preload" as="image" href="./assets/images/hero-banner-2.jpg">
+  <link rel="preload" as="image" href="./assets/images/hero-shape-2.png">
+
+</head>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+    // Desktop එකේ බටන් එක
+    const btnText = document.getElementById('btnText');
+    const mainLoginBtn = document.getElementById('mainLoginBtn');
+    
+    // මොබයිල් මෙනු එකේ විස්තර
+    const mobileGreeting = document.getElementById('mobileGreeting');
+    const mobileUsername = document.getElementById('mobileUsername');
+
+    if (user) {
+        // ලොග් වී ඇත්නම් නම ලබා ගැනීම
+        const firstName = user.displayName ? user.displayName.split(' ')[0] : "Student";
+        
+        // 1. Desktop Button එක Update කිරීම
+        if (btnText) btnText.innerText = "Hi, " + firstName;
+        if (mainLoginBtn) mainLoginBtn.href = "javascript:void(0)";
+
+        // 2. Mobile Menu එක Update කිරීම
+        if (mobileGreeting) mobileGreeting.style.display = "block";
+        if (mobileUsername) mobileUsername.innerText = firstName;
+
+        // Database එකෙන් නම තිබේදැයි පරීක්ෂා කිරීම
+        firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
+            const userData = snapshot.val();
+            if (userData && userData.fullName) {
+                const dbName = userData.fullName.split(' ')[0];
+                if (btnText) btnText.innerText = "Hi, " + dbName;
+                if (mobileUsername) mobileUsername.innerText = dbName;
+            }
+        });
+    } else {
+        // ලොග් වී නැත්නම්
+        if (btnText) btnText.innerText = "Login for free";
+        if (mobileGreeting) mobileGreeting.style.display = "none";
+    }
+});
+</script>
+<body id="top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      <a href="#" class="logo">
+        <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
+      </a>
+<div class="header-actions">
+ 
+
+  <button class="header-action-btn" aria-label="open menu" data-nav-toggler>
+    <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+  </button>
+</div>
+      <nav class="navbar" data-navbar>
+
+        <div class="wrapper">
+          <a href="#" class="logo">
+            <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
+          </a>
+        <div class="user-greeting">
+           <nav class="navbar" data-navbar>
+  <div class="wrapper">
+    <a href="#" class="logo">
+      <img src="./assets/images/logo.svg" width="162" height="50" alt="EduWeb logo">
+    </a>
+    
+    <div id="mobileGreeting" style="display: none; padding: 10px 20px; color: #38bdf8; font-weight: bold;">
+      👋 Hi, <span id="mobileUsername">Student</span>
+    </div>
+
+    <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+      <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+    </button>
+  </div>
+  ...
+</nav>
+<div>
+
+        <ul class="navbar-list">
+
+          <li class="navbar-item">
+            <a href="#home" class="navbar-link" data-nav-link>Home</a>
+          </li>
+
+          <li class="navbar-item">
+            <a href="#about" class="navbar-link" data-nav-link>About</a>
+          </li>
+
+          <li class="navbar-item">
+            <a href="#courses" class="navbar-link" data-nav-link>Courses</a>
+          </li>
+
+          <li class="navbar-item">
+            <a href="#blog" class="navbar-link" data-nav-link>Blog</a>
+          </li>
+
+          <li class="navbar-item">
+            <a href="#" class="navbar-link" data-nav-link>Contact</a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+      <div class="header-actions">
+
+      
+<a href="login.html" class="btn has-before">
+<span class="span">Login for free</span>
+<ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+  </a>
+
+  <button class="header-action-btn" aria-label="open menu" data-nav-toggler>
+      <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+  </button>
+
+      </div>
+
+      <div class="overlay" data-nav-toggler data-overlay></div>
+
+    </div>
+  </header>
+
+
+
+
+    <div class="user-header">
+      <p class="welcome-text" id="welcomeMsg">Hi, Student!</p>
+    </div>
+
+  <main>
+    <article>
+
+      <!-- 
+        - #HERO
+      -->
+
+      <section class="section hero has-bg-image" id="home" aria-label="home"
+        style="background-image: url('./assets/images/hero-bg.svg')">
+        <div class="container">
+
+          <div class="hero-content">
+
+            <h1 class="h1 section-title">
+              The Best Program to <span class="span">Enroll</span> for Exchange
+            </h1>
+
+            <p class="hero-text">
+              This Learning Management System (LMS) provides student  for accurate and up-to-date information on available exchange programs. The platform is designed to support academic collaboration, cultural exchange, and professional development by guiding students through the enrollment process in a clear and structured manner.
+              Through this system, users can explore eligibility criteria, application procedures, timelines, and partner institutions, enabling them to select the most suitable exchange program aligned with their academic goals. The LMS ensures a smooth, transparent, and efficient enrollment experience for all participants.
+            </p>
+            <div class="hero-item-wrapper">
+  <div class="hero-item">
+    <div class="item-icon">
+      <ion-icon name="call-outline"></ion-icon>
+    </div>
+    <div>
+      <p class="item-title">ONLINE SUPPORT</p>
+      <a href="tel:+94778965382" class="item-link">+94-715244467</a>
+    </div>
+  </div>
+</div>
+            <button class="btn btn-primary has-before" onclick="toggleSearch()">
+  <span class="span">Find Course</span>
+  <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+</button>
+
+<div class="search-container" id="searchContainer" style="display: none; margin-top: 20px;">
+  <input type="text" id="categorySearch" list="subjectSuggestions" placeholder="විෂයෙහි නම මෙතන ලියන්න..." onkeyup="filterCategories()">
+  
+  <datalist id="subjectSuggestions">
+    <option value="ගණිතය">
+    <option value="විද්‍යාව">
+    <option value="සිංහල">
+    <option value="ඉතිහාසය">
+    <option value="බුද්ධ ධර්මය">
+    <option value="භූගෝල විද්‍යාව">
+    <option value="තොරතුරු තාක්ෂණය (ICT)">
+    <option value="අධ්‍යාපන මනෝවිද්‍යාව">
+    <option value="Technology">
+  </datalist>
+</div>
+
+          </div>
+
+          <figure class="hero-banner">
+
+            <div class="img-holder one" style="--width: 270; --height: 300;">
+              <img src="./assets/images/hero-banner-1.jpg" width="270" height="300" alt="hero banner" class="img-cover">
+            </div>
+
+            <div class="img-holder two" style="--width: 240; --height: 370;">
+              <img src="./assets/images/hero-banner-2.jpg" width="240" height="370" alt="hero banner" class="img-cover">
+            </div>
+
+            <img src="./assets/images/hero-shape-2.png" width="622" height="551" alt="" class="shape hero-shape-2">
+
+          </figure>
+
+        </div>
+      </section>
+<div id="notice-board" style="display: none; background: rgba(33, 212, 253, 0.1); border: 1px dashed #21d4fd; margin: 15px 5%; padding: 15px; border-radius: 10px; color: #fff;">
+  <span style="color: #21d4fd; font-weight: bold;">📢 Announcement: </span>
+  <span id="notice-text">Loading latest updates...</span>
+</div>
+<div class="user-header">
+  <p class="welcome-text" id="welcomeMsg">Hi, Student!</p>
+   <a href="forum.html" class="forum-btn">💬 Visit Forum</a>
+</div>
+
+      <!-- 
+        - #CATEGORY
+      -->
+<div id="notice-board" style="display: none; background: rgba(33, 212, 253, 0.1); border: 1px dashed #21d4fd; margin: 20px 5%; padding: 15px; border-radius: 12px; color: #fff; font-family: 'Poppins', sans-serif;">
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <span style="font-size: 20px;">📢</span>
+    <marquee id="notice-text" behavior="scroll" direction="left" style="font-weight: 500; color: #e2e8f0;">Loading latest updates...</marquee>
+  </div>
+</div>
+      <section class="section category" aria-label="category">
+        <div class="container">
+
+          <p class="section-subtitle">Categories</p>
+
+          <h2 class="h2 section-title">
+            Online <span class="span">AND</span> Remote Learning.
+          </h2>
+
+          <p class="section-text">
+            Consectetur adipiscing elit sed do eiusmod tempor.
+          </p>
+
+          <ul class="grid-list">
+ <li>
+  <div class="category-card" onclick="handleCategoryClick('educational-psychology.html')" style="--color: 260, 70%, 55%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/psychology.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🧠 අධ්‍යාපන මනෝවිද්‍යාව</a></h3>
+    <span class="card-badge">Education</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('massessment.html')" style="--color: 10, 80%, 50%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/massessment.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">📊 අධ්‍යාපන මිනුම් ඇගයීම් හා තක්සේරුකරණය</a></h3>
+    <span class="card-badge">Education</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('educational-sociology.html')" style="--color: 190, 70%, 45%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/sociology.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">👥 අධ්‍යාපන සමාජ විද්‍යාව</a></h3>
+    <span class="card-badge">Education</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('foundations-edu.html')" style="--color: 45, 85%, 45%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/foundations.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">📖 අධ්‍යාපන මූලිකාංග</a></h3>
+    <span class="card-badge">Education</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('guidance-counseling.html')" style="--color: 140, 65%, 40%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/counseling.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🤝 අධ්‍යාපන මාර්ගෝපදේශනය හා උපදේශනය</a></h3>
+    <span class="card-badge">Education</span>
+  </div>
+</li>
+            <li>
+  <div class="category-card" onclick="handleCategoryClick('Technology-categories.html')" style="--color: 170, 75%, 41%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/category-2.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">⚙️ Technology</a></h3>
+    <span class="card-badge">Grade 12-13</span>
+  </div>
+</li>
+<li>
+  <div class="category-card" onclick="handleCategoryClick('Maths.html')" style="--color: 220, 80%, 45%; cursor: pointer;">
+    <div class="card-icon">
+      <img src="./assets/images/maths.svg" width="40" alt="Maths" class="img">
+    </div>
+    <h3 class="h3">
+      <a href="javascript:void(0)" class="card-title">📐 ගණිතය</a>
+    </h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('Science.html')" style="--color: 180, 70%, 40%; cursor: pointer;">
+    <div class="card-icon">
+      <img src="./assets/images/science.svg" width="40" alt="Science" class="img">
+    </div>
+    <h3 class="h3">
+      <a href="javascript:void(0)" class="card-title">🔬 විද්‍යාව</a>
+    </h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('sinhala.html')" style="--color: 170, 75%, 41%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/sinhala.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">📜 සිංහල </a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('pts.html')" style="--color: 42, 94%, 55%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/buddhism.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">☸️ PTS</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+<li>
+  <div class="category-card" onclick="handleCategoryClick('Primary.html')" style="--color: 42, 94%, 55%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/buddhism.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">☸️ ප්‍රාථමික </a></h3>
+    <span class="card-badge">Grade 1-5</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('tamil.html')" style="--color: 300, 75%, 41%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/tamil.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">📝 Tamil</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('ict.html')" style="--color: 200, 75%, 41%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/ict.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">💻 ICT</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('health.html')" style="--color: 120, 75%, 35%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/helth.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🏃 සෞඛ්‍ය හා ශාරීරික අධ්‍යාපනය</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('ArtandCraft.html')" style="--color: 351, 83%, 61%; cursor: pointer;">
+    <div class="card-icon">
+      <img src="./assets/images/art-craft.svg" width="40" height="40" loading="lazy" alt="Art & Craft" class="img"></div>
+    <h3 class="h3">
+      <a href="javascript:void(0)" class="card-title">🎨 Art & Craft</a>
+    </h3>
+    <span class="card-badge">Grade 10-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('English.html')" style="--color: 229, 75%, 41%; cursor: pointer;">
+    <div class="card-icon">
+      <img src="./assets/images/english.svg" width="40" height="40" loading="lazy" alt="English Language" class="img">
+    </div>
+    <h3 class="h3">
+      <a href="javascript:void(0)" class="card-title">📚 English</a>
+    </h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('drama.html')" style="--color: 100, 60%, 40%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/agri.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🌱 නාට්‍ය</a></h3>
+    <span class="card-badge">Grade 10-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('art.html')" style="--color: 280, 70%, 50%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/art.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🎨 චිත්‍ර</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('dance.html')" style="--color: 340, 80%, 50%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/dance.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">💃 නැටුම්</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>
+
+<li>
+  <div class="category-card" onclick="handleCategoryClick('music.html')" style="--color: 190, 80%, 40%; cursor: pointer;">
+    <div class="card-icon"><img src="./assets/images/music.svg" width="40" class="img"></div>
+    <h3 class="h3"><a href="javascript:void(0)" class="card-title">🎶 සංගීතය</a></h3>
+    <span class="card-badge">Grade 6-11</span>
+  </div>
+</li>     </ul>
+
+        </div>
+      </section>
+       <header class="user-header">
+      <div class="welcome-text" id="welcomeMsg">Loading...</div>
+      <div id="notice-board" style="display: none; background: rgba(33, 212, 253, 0.1); border: 1px dashed #21d4fd; margin: 15px 5%; padding: 15px; border-radius: 10px; color: #fff;">
+    <span style="color: #21d4fd; font-weight: bold;">📢 Announcement: </span>
+     <span id="notice-text">Loading latest updates...</span>
+   </div>
+       <a href="forum.html" class="forum-btn">💬 Student Forum</a>
+    </header>
+
+      <!-- 
+      
+        - #ABOUT
+      -->
+
+      <section class="section about" id="about" aria-label="about">
+        <div class="container">
+
+          <figure class="about-banner">
+
+            <div class="img-holder" style="--width: 520; --height: 370;">
+              <img src="./assets/images/about-banner.jpg" width="520" height="370" loading="lazy" alt="about banner"
+                class="img-cover">
+            </div>
+
+            <img src="./assets/images/about-shape-1.svg" width="360" height="420" loading="lazy" alt=""
+              class="shape about-shape-1">
+
+            <img src="./assets/images/about-shape-2.svg" width="371" height="220" loading="lazy" alt=""
+              class="shape about-shape-2">
+
+            <img src="./assets/images/about-shape-3.png" width="722" height="528" loading="lazy" alt=""
+              class="shape about-shape-3">
+
+          </figure>
+
+          <div class="about-content">
+
+            <p class="section-subtitle">📘 About Us Content</p>
+
+            <h2 class="h2 section-title">
+               <span class="span">Our Legacy A Decade of</span> Empowering Educators through Technology
+            </h2>
+
+            <p class="section-text">
+            Developed by the Department of Technology at Siyane National College of Education, this platform is a dedicated digital initiative to support students across all academic disciplines. For over 10 years, we have been at the forefront of distance learning, providing comprehensive resources and textbooks for every subject stream. Our mission is to bridge the gap between traditional learning and modern technology, ensuring that future educators have access to high-quality materials anytime, anywhere.
+            </p>
+
+            <ul class="about-list">
+
+              <li class="about-item">
+                <ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>
+
+                <span class="span">Expert Trainers</span>
+              </li>
+
+              <li class="about-item">
+                <ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>
+
+                <span class="span">Online Remote Learning</span>
+              </li>
+
+              <li class="about-item">
+                <ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>
+
+                <span class="span">Lifetime Access</span>
+              </li>
+
+            </ul>
+
+            <img src="./assets/images/about-shape-4.svg" width="100" height="100" loading="lazy" alt=""
+              class="shape about-shape-4">
+
+          </div>
+
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #COURSE
+      -->
+
+      <section class="section course" id="courses" aria-label="course">
+        <div class="container">
+
+          <p class="section-subtitle">Popular Courses</p>
+
+          <h2 class="h2 section-title">Pick A Populer Material To Get Started</h2>
+
+          <ul class="grid-list">
+
+            <li>
+              <div class="course-card">
+
+                <figure class="card-banner img-holder" style="--width: 370; --height: 220;">
+                  <img src="./assets/images/course-1.jpg" width="370" height="220" loading="lazy"
+                    alt="Build Responsive Real- World Websites with HTML and CSS" class="img-cover">
+                </figure>
+
+                <div class="abs-badge">
+                  <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+
+                  <span class="span"> Weeks</span>
+                </div>
+
+                <div class="card-content">
+
+                  <span class="badge">පාඩම් සැලසුම්</span>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">පාඩම් සැලසුම්</a>
+                  </h3>
+
+                  <div class="wrapper">
+
+                    <div class="rating-wrapper">
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+
+                    <p class="rating-text">(6.9/7 Rating)</p>
+
+                  </div>
+
+                  <data class="price" value="29">$0</data>
+
+                  <ul class="card-meta-list">
+
+                    <li class="card-meta-item">
+                      <ion-icon name="library-outline" aria-hidden="true"></ion-icon>
+
+                      <span class="span">8 Lessons</span>
+                    </li>
+
+                    <li class="card-meta-item">
+                      <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+
+                      <span class="span">20 Students</span>
+                    </li>
+
+                  </ul>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li>
+              <div class="course-card">
+
+                <figure class="card-banner img-holder" style="--width: 370; --height: 220;">
+                  <img src="./assets/images/course-2.jpg" width="370" height="220" loading="lazy"
+                    alt="Java Programming Masterclass for Software Developers" class="img-cover">
+                </figure>
+
+                <div class="abs-badge">
+                  <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+
+                  <span class="span">8 Weeks</span>
+                </div>
+
+                <div class="card-content">
+
+                  <span class="badge">පාසල් පැතිකඩ</span>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">පාසල් පැතිකඩ</a>
+                  </h3>
+
+                  <div class="wrapper">
+
+                    <div class="rating-wrapper">
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+
+                    <p class="rating-text">(4.5 /9 Rating)</p>
+
+                  </div>
+
+                  <data class="price" value="49">$0</data>
+
+                  <ul class="card-meta-list">
+
+                    <li class="card-meta-item">
+                      <ion-icon name="library-outline" aria-hidden="true"></ion-icon>
+
+                      <span class="span">15 Lessons</span>
+                    </li>
+
+                    <li class="card-meta-item">
+                      <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+
+                      <span class="span">4</span>
+                    </li>
+
+                  </ul>
+
+                </div>
+
+              </div>
+            </li>
+                  </ul>
+
+                </div>
+
+              </div>
+            </li>
+
+          </ul>
+
+          <a href="#" class="btn has-before">
+            <span class="span">Browse more courses</span>
+
+            <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+          </a>
+
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #VIDEO
+      -->
+
+      <section class="video has-bg-image" aria-label="video"
+        style="background-image: url('./assets/images/video-bg.png')">
+        <div class="container">
+
+          <div class="video-card">
+
+            <div class="video-banner img-holder has-after" style="--width: ; --height: ;">
+              <img src="./assets/images/video-banner.jpg" width="970" height="550" loading="lazy" alt="video banner"
+                class="img-cover">
+            </div>
+
+            <img src="./assets/images/video-shape-1.png" width="1089" height="605" loading="lazy" alt=""
+              class="shape video-shape-1">
+
+            <img src="./assets/images/video-shape-2.png" width="158" height="174" loading="lazy" alt=""
+              class="shape video-shape-2">
+
+          </div>
+
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #STATE
+      -->
+
+      <section class="section stats" aria-label="stats">
+        <div class="visitor-stats">
+  <div class="stat-card">
+    <ion-icon name="people-outline"></ion-icon>
+    <div class="stat-info">
+      <h3 id="totalUsers">55</h3>
+      <p>Total Enrolled Students</p>
+    </div>
+  </div>
+</div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #BLOG
+      -->
+
+     
+
+  
+ 
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+
+    <div class="footer-top section">
+      <div class="container grid-list">
+
+        <div class="footer-brand">
+
+          <a href="#" class="logo">
+            <img src="./assets/images/logo-light.svg" width="162" height="50" alt="EduWeb logo">
+          </a>
+
+          <p class="footer-brand-text">
+            he platform is designed to support academic collaboration, cultural exchange, and professional development by guiding students through the enrollment process in a clear and structured manner.
+          </p>
+
+          <div class="wrapper">
+            <span class="span">Add:</span>
+
+            <address class="address">Siyane National College</address>
+          </div>
+
+          <div class="wrapper">
+            <span class="span">Call:</span>
+
+            <a href="tel:+011234567890" class="footer-link">+94-778965382</a>
+          </div>
+
+          <div class="wrapper">
+            <span class="span">Email:</span>
+
+            <a href="mailto:info@eduweb.com" class="footer-link">pamudith11@gmail.com</a>
+          </div>
+
+        </div>
+
+        <ul class="footer-list">
+
+          <li>
+            <p class="footer-list-title">Online Platform</p>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">About</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Courses</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Instructor</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Events</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Instructor Profile</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Purchase Guide</a>
+          </li>
+
+        </ul>
+
+        <ul class="footer-list">
+
+          <li>
+            <p class="footer-list-title">Links</p>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Contact Us</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Gallery</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">News & Articles</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">FAQ's</a>
+          </li>
+
+          <li>
+            <a href="login.html" class="footer-link">Sign In/Registration</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-link">Coming Soon</a>
+          </li>
+
+        </ul>
+
+        <div class="footer-list">
+
+          <p class="footer-list-title">Contacts</p>
+
+          <p class="footer-list-text">
+            Enter your email address to register to our newsletter subscription
+          </p>
+
+          <form action="" class="newsletter-form">
+            <input type="email" name="email_address" placeholder="Your email" required class="input-field">
+
+            <button type="submit" class="btn has-before">
+              <span class="span">Subscribe</span>
+
+              <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+            </button>
+          </form>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          Copyright 2026 All Rights Reserved by <a href="#" class="copyright-link">Powerd By Department Of Technology - Siyane National College Of Education</a>
+        </p>
+
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- 
+    - #BACK TO TOP
+  -->
+
+  <a href="#top" class="back-top-btn" aria-label="back top top" data-back-top-btn>
+    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+  </a>
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="./assets/js/script.js" defer></script>
+
+  <!-- 
+    - ionicon link
+  -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    // 1. Firebase Config - මෙය එක පාරක් පමණක් තබන්න
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtm51hTUEFBN7c9PIyAgTbMU6gFyBZ1B0",
+      authDomain: "eduweb-b4b35.firebaseapp.com",
+      databaseURL: "https://eduweb-b4b35-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "eduweb-b4b35",
+      storageBucket: "eduweb-b4b35.firebasestorage.app",
+      appId: "1:604814824340:web:85452d467ed1f268363581",
+      measurementId: "G-4ZDKT09QV6"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // 2. Auth State & UI Updates
+    firebase.auth().onAuthStateChanged((user) => {
+      const actionBtn = document.querySelector('.header-actions .btn');
+      const welcomeMsg = document.getElementById('welcomeMsg');
+      const loginLink = document.getElementById('login-link');
+      const userProfile = document.getElementById('user-profile');
+      const displayNameTop = document.getElementById('display-name');
+
+      if (user) {
+        // ලොග් වී ඇත්නම් UI එක වෙනස් කිරීම
+        const name = user.displayName ? user.displayName.split(' ')[0] : "Student";
+        
+        if (actionBtn) {
+          actionBtn.innerHTML = `<span class="span">Hi, ${name}</span>`;
+          actionBtn.href = "javascript:void(0)";
+        }
+        
+        if (welcomeMsg) welcomeMsg.innerText = "Hi, " + name + "!";
+        if (loginLink) loginLink.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'block';
+        if (displayNameTop) displayNameTop.innerText = name;
+
+        // Database එකෙන් නම පරීක්ෂාව
+        db.ref('users/' + user.uid).once('value').then((snapshot) => {
+          const userData = snapshot.val();
+          if (userData && userData.fullName) {
+            const dbName = userData.fullName.split(' ')[0];
+            if (welcomeMsg) welcomeMsg.innerText = "Hi, " + dbName + "!";
+            if (displayNameTop) displayNameTop.innerText = dbName;
+          }
+        });
+      } else {
+        // ලොග් වී නැත්නම් - මෙතනදී login.html එකට පන්නන්නේ නැත (ඔයා ඉල්ලූ පරිදි)
+        if (welcomeMsg) welcomeMsg.innerText = "Welcome, Guest!";
+        if (loginLink) loginLink.style.display = 'block';
+        if (userProfile) userProfile.style.display = 'none';
+      }
+    });
+
+    // 3. Subject එකක් Click කළ විට ක්‍රියාත්මක වන Function එක
+    function handleCategoryClick(targetPage) {
+      const currentUser = firebase.auth().currentUser;
+      if (currentUser) {
+        window.location.href = targetPage;
+      } else {
+        alert("කරුණාකර මෙම අංගය භාවිතා කිරීමට ප්‍රථමයෙන් ලොග් වන්න!");
+        window.location.href = "login.html";
+      }
+    }
+
+    // 4. Logout Function
+    function logoutUser() {
+      if (confirm("ඔබට Logout වීමට අවශ්‍යද?")) {
+        firebase.auth().signOut().then(() => {
+          window.location.reload();
+        });
+      }
+    }
+
+    // 5. Notice Board
+    db.ref('notice').on('value', (snapshot) => {
+      const notice = snapshot.val();
+      const noticeBoard = document.getElementById('notice-board');
+      const noticeText = document.getElementById('notice-text');
+      if (notice && notice.text && notice.text.trim() !== "") {
+        if (noticeBoard) noticeBoard.style.display = "block";
+        if (noticeText) noticeText.innerText = notice.text;
+      } else {
+        if (noticeBoard) noticeBoard.style.display = "none";
+      }
+    });
+
+    // 6. Total Users Count
+    db.ref('users').on('value', (snapshot) => {
+      const totalUsersEl = document.getElementById('totalUsers');
+      if (totalUsersEl) totalUsersEl.innerText = snapshot.numChildren();
+    });
+
+    // 7. Search Functionality
+    function toggleSearch() {
+      const searchBox = document.getElementById("searchContainer");
+      if (searchBox) {
+        searchBox.style.display = (searchBox.style.display === "none") ? "block" : "none";
+      }
+    }
+
+    function filterCategories() {
+      let input = document.getElementById('categorySearch').value.toLowerCase();
+      let cards = document.getElementsByClassName('category-card');
+      for (let i = 0; i < cards.length; i++) {
+        let title = cards[i].querySelector(".card-title").innerText.toLowerCase();
+        cards[i].parentElement.style.display = title.includes(input) ? "" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum - Discussion & Replies</title>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <style>
+    body { background-color: #0f172a; color: white; font-family: 'Poppins', sans-serif; padding: 20px; }
+    .forum-container { max-width: 850px; margin: auto; }
+    
+    /* Main Post Box */
+    .post-box { background: #1e293b; padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #334155; }
+    textarea { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; padding: 12px; resize: none; outline: none; box-sizing: border-box; }
+    .btn-post { background: #21d4fd; color: black; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; float: right; }
+
+    /* Forum Items */
+    .forum-item { background: #1e293b; padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .user-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #21d4fd; }
+    .user-name { font-weight: 600; color: #93c5fd; }
+    .post-text { font-size: 15px; margin-bottom: 15px; display: block; }
+
+    /* Reply Section */
+    .replies-container { margin-left: 30px; border-left: 2px solid #334155; padding-left: 15px; margin-top: 15px; }
+    .reply-item { background: rgba(15, 23, 42, 0.5); padding: 10px 15px; border-radius: 10px; margin-bottom: 8px; font-size: 13px; }
+    .reply-user { font-weight: 600; color: #fde047; font-size: 12px; }
+    
+    .reply-input-group { display: flex; gap: 10px; margin-top: 15px; }
+    .reply-input { flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 5px; color: white; padding: 8px; font-size: 13px; }
+    .btn-reply { background: #334155; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+    .btn-reply:hover { background: #21d4fd; color: black; }
+  </style>
+</head>
+<body>
+
+<div class="forum-container">
+  <h2 style="text-align: center; color: #21d4fd;">Student Discussion Forum</h2>
+  
+  <div class="post-box">
+    <textarea id="postInput" rows="3" placeholder="ඔබේ ප්‍රශ්නය මෙතන ලියන්න..."></textarea>
+    <button class="btn-post" onclick="submitPost()">Post Question</button>
+    <div style="clear: both;"></div>
+  </div>
+
+  <div id="forumFeed"></div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtm51hTUEFBN7c9PIyAgTbMU6gFyBZ1B0",
+    authDomain: "eduweb-b4b35.europe-west1.firebaseapp.com",
+    databaseURL: "https://eduweb-b4b35-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "eduweb-b4b35",
+    storageBucket: "eduweb-b4b35.firebasestorage.app",
+    appId: "1:604814824340:web:85452d467ed1f268363581"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  // 1. ප්‍රධාන පෝස්ට් එකක් යැවීම
+  function submitPost() {
+    const user = auth.currentUser;
+    const text = document.getElementById('postInput').value;
+    if (!user || !text.trim()) return;
+
+    const postData = {
+      name: user.displayName,
+      photo: user.photoURL,
+      message: text,
+      timestamp: Date.now()
+    };
+    db.ref('forum').push(postData);
+    document.getElementById('postInput').value = "";
+  }
+
+  // 2. පිළිතුරක් (Reply) යැවීම
+  function submitReply(postId) {
+    const user = auth.currentUser;
+    const replyText = document.getElementById(`reply-in-${postId}`).value;
+    if (!user || !replyText.trim()) return;
+
+    const replyData = {
+      name: user.displayName,
+      message: replyText,
+      timestamp: Date.now()
+    };
+    db.ref(`forum/${postId}/replies`).push(replyData);
+    document.getElementById(`reply-in-${postId}`).value = "";
+  }
+
+  // 3. පෝස්ට් සහ පිළිතුරු Load කිරීම
+  function loadForum() {
+    db.ref('forum').on('value', (snapshot) => {
+      const feed = document.getElementById('forumFeed');
+      feed.innerHTML = "";
+      
+      let data = [];
+      snapshot.forEach(child => {
+        let val = child.val();
+        val.id = child.key;
+        data.unshift(val);
+      });
+
+      data.forEach(post => {
+        let repliesHTML = "";
+        if (post.replies) {
+          Object.values(post.replies).forEach(r => {
+            repliesHTML += `
+              <div class="reply-item">
+                <div class="reply-user">${r.name}</div>
+                <div>${r.message}</div>
+              </div>`;
+          });
+        }
+
+        const postHTML = `
+          <div class="forum-item">
+            <div class="user-info">
+              <img src="${post.photo}" class="user-img">
+              <div class="user-name">${post.name}</div>
+            </div>
+            <div class="post-text">${post.message}</div>
+            
+            <div class="replies-container">
+              ${repliesHTML}
+              <div class="reply-input-group">
+                <input type="text" id="reply-in-${post.id}" class="reply-input" placeholder="පිළිතුරක් ලියන්න...">
+                <button class="btn-reply" onclick="submitReply('${post.id}')">Reply</button>
+              </div>
+            </div>
+          </div>`;
+        feed.innerHTML += postHTML;
+      });
+    });
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user) loadForum();
+    else window.location.href = "login.html";
+  });
+</script>
+</body>
+</html>

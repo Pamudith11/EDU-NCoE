@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Advanced - EduWeb</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  
+  <style>
+    :root {
+      --cyan: #21d4fd;
+      --danger: #ff4b2b;
+      --bg: #0a0b10;
+      --card-bg: #161b22;
+    }
+
+    body { padding: 30px; background-color: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; }
+    .admin-container { max-width: 1200px; margin: auto; }
+
+    /* Stats Section */
+    .stats-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 20px; 
+      margin-bottom: 30px; 
+    }
+    .stat-card { 
+      background: var(--card-bg); 
+      padding: 20px; 
+      border-radius: 15px; 
+      text-align: center; 
+      border: 1px solid #30363d; 
+    }
+    .stat-card h3 { margin: 0; font-size: 28px; color: var(--cyan); }
+    .stat-card p { margin: 5px 0 0; color: #94a3b8; font-size: 14px; }
+
+    /* Table Section */
+    .table-container { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #30363d; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid #30363d; }
+    th { background: #1f2937; color: var(--cyan); font-size: 13px; text-transform: uppercase; }
+    
+    .btn-delete { 
+      background: rgba(255, 75, 43, 0.1); 
+      color: #ff4b2b; 
+      border: 1px solid #ff4b2b; 
+      padding: 5px 10px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 12px;
+      transition: 0.3s;
+    }
+    .btn-delete:hover { background: #ff4b2b; color: white; }
+
+    .search-box {
+      width: 100%; padding: 12px; margin-bottom: 20px;
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 10px; color: white; outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-container">
+  <h2 style="color: var(--cyan); margin-bottom: 5px;">Admin Control Center</h2>
+  <p style="color: #94a3b8; margin-bottom: 25px;">දත්ත විශ්ලේෂණය සහ කළමනාකරණය</p>
+<div style="background: #161b22; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #30363d;">
+  <h4 style="margin-top:0; color: #21d4fd;">Update Notice Board</h4>
+  <input type="text" id="newNotice" placeholder="මෙතන අලුත් නිවේදනය ලියන්න..." style="width: 80%; padding: 10px; border-radius: 5px; border: 1px solid #30363d; background: #0a0b10; color: white;">
+  <button onclick="updateNotice()" style="padding: 10px 20px; background: #21d4fd; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Update</button>
+</div>
+
+<script>
+  function updateNotice() {
+    const text = document.getElementById('newNotice').value;
+    if(text) {
+      db.ref('notice').set({ text: text })
+        .then(() => alert("Notice Updated!"))
+        .catch(err => alert("Error: " + err.message));
+    }
+  }
+</script>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3 id="totalUsers">0</h3>
+      <p>Total Students</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="activeToday">0</h3>
+      <p>Colleges Active</p>
+    </div>
+  </div>
+
+  <input type="text" id="searchInput" class="search-box" placeholder="Search by name, college or email..." onkeyup="filterTable()">
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>College</th>
+          <th>Phone</th>
+          <th>Last Seen</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDtm51hTUEFBN7c9PIyAgTbMU6gFyBZ1B0",
+    authDomain: "eduweb-b4b35.firebaseapp.com",
+    databaseURL: "https://eduweb-b4b35-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "eduweb-b4b35",
+    storageBucket: "eduweb-b4b35.firebasestorage.app",
+    appId: "1:604814824340:web:85452d467ed1f268363581"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  function loadUsers() {
+    const tableBody = document.getElementById('userTableBody');
+    
+    db.ref('users').on('value', (snapshot) => {
+      tableBody.innerHTML = "";
+      let total = 0;
+      let colleges = new Set();
+
+      snapshot.forEach((childSnapshot) => {
+        const user = childSnapshot.val();
+        const userId = childSnapshot.key;
+        total++;
+        if(user.college) colleges.add(user.college);
+
+        const row = `
+          <tr>
+            <td>
+               <div style="font-weight:600">${user.fullName || "User"}</div>
+               <div style="font-size:11px; color:#64748b">${user.email}</div>
+            </td>
+            <td style="color:#fde047">${user.college || 'N/A'}</td>
+            <td>${user.phone || 'N/A'}</td>
+            <td style="font-size:12px">${user.last_login ? new Date(user.last_login).toLocaleDateString() : 'N/A'}</td>
+            <td>
+              <button class="btn-delete" onclick="deleteUser('${userId}')">Remove</button>
+            </td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+
+      // Update Stats
+      document.getElementById('totalUsers').innerText = total;
+      document.getElementById('activeToday').innerText = colleges.size;
+    });
+  }
+
+  // දත්ත ඉවත් කිරීමේ පහසුකම (Delete User)
+  function deleteUser(uid) {
+    if(confirm("Are you sure you want to remove this student?")) {
+      db.ref('users/' + uid).remove()
+        .then(() => alert("Student removed successfully."))
+        .catch((err) => alert("Error: " + err.message));
+    }
+  }
+
+  // සර්ච් කිරීමේ පහසුකම (Search Filter)
+  function filterTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let rows = document.getElementById("userTableBody").getElementsByTagName("tr");
+
+    for (let row of rows) {
+      row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+    }
+  }
+
+  // Admin Check & Load
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user && user.email === "pamudith11@gmail.com") {
+      loadUsers();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+</script>
+</body>
+</html>
